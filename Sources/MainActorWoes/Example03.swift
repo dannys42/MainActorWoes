@@ -20,6 +20,13 @@ public final class Example03: @unchecked Sendable {
             self.update()
         }
         
+        
+        // If there was some way of incorporating the following, then this approach would work regardless of whether we run on the main thread or not.
+        /*
+        if Thread.isMainThread {
+            MainActor.executeAllTasks()     // wish you were here
+        }
+        */
     }
     
     
