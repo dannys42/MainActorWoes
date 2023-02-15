@@ -16,15 +16,39 @@ public final class Example03: @unchecked Sendable {
         self.didUpdateDispatchGroup = DispatchGroup()
         self.didUpdateDispatchGroup.enter()
         
+        
+        // Option 1:
         Task { @MainActor in
             self.update()
         }
         
         
-        // If there was some way of incorporating the following, then this approach would work regardless of whether we run on the main thread or not.
+        // Option 2:
+        
+        // If there was some way of synchronously "queuing" a task, then this approach would work regardless of whether we run on the main thread or not.  Functionally this might be equivalent to:
         /*
+         Task { @MainActor in
+             self.update()
+         }
+
         if Thread.isMainThread {
             MainActor.executeAllTasks()     // wish you were here
+        }
+        */
+        
+        
+        // Option 3:
+        
+        // If we can provide a hint to the compiler that we know better, this could work too:
+        /*
+        if Thread.isMainThread {
+            MainActor.unsafeExecute {
+                self.update()
+            }
+        } else {
+            Task { @MainActor in
+                self.update()
+            }
         }
         */
     }
